@@ -23,6 +23,15 @@ class Page(object):
     def __getattr__(self, attr):
         return getattr(self.response, attr)
 
+    def __str__(self):
+        if isinstance(self.referrer, Page):
+            referrer_url = self.referrer.url
+        else:
+            referrer_url = self.referrer
+        return "{url} [referrer: {referrer}]".format(url=self.url,
+                                                     referrer=referrer_url
+                                                     )
+
 
 def fetch(url, referrer):
     return Page(url, referrer)
@@ -50,8 +59,8 @@ def visit(url, parent=None):
     try:
         page = fetch(url, parent)
     except Exception as e:
-        print('Exception in [{0}] from [{1}]'.format(page.url, parent))
-        exceptions.append({'url': page, 'parent': parent, 'error': e})
+        print('Exception in {0}'.format(page))
+        exceptions.append({'page': page, 'error': e})
     else:
         status = page.status_code
         for visitor in all_visitors:
