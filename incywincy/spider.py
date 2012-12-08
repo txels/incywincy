@@ -28,9 +28,7 @@ class Page(object):
             referrer_url = self.referrer.url
         else:
             referrer_url = self.referrer
-        return "{url} [referrer: {referrer}]".format(url=self.url,
-                                                     referrer=referrer_url
-                                                     )
+        return "{url} [from: {ref}]".format(url=self.url, ref=referrer_url)
 
 
 def fetch(url, referrer):
