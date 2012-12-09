@@ -1,6 +1,7 @@
 import re
 import sys
 from urlparse import urljoin
+from collections import deque
 
 from bs4 import BeautifulSoup
 import requests
@@ -10,7 +11,6 @@ from incywincy import config
 
 
 UA = 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'
-visited = set()
 exceptions = []
 
 
@@ -78,26 +78,34 @@ def visit(url, parent=None):
 
     Will keep track of visited pages, so as to avoid processing links twice.
     """
+    pending = deque()
+    visited = set()
+
+    pending.append((url, parent))
     visited.add(url)
-    print('Opening: ' + url)
-    try:
-        page = Page(url, parent)
-    except Exception as e:
-        print('Exception in {0}: {1}'.format(url, e))
-        exceptions.append({'url': url, 'error': e})
-    else:
-        status = page.status_code
-        for pattern, visitor in settings.visitors:
-            url_path = url[len(settings.root):]
-            if re.match(pattern, url_path):
-                visitor(page)
-        # recurse while successful
-        if status == 200:
-            links = page.normalised_links(settings.start)
-            links.difference_update(visited)
-            # print("New links:\n" + "\n".join(links))
-            for link in links:
-                visit(link, page)
+
+    while len(pending) > 0:
+        url, parent = pending.popleft()
+        print('Opening: ' + url)
+        try:
+            page = Page(url, parent)
+        except Exception as e:
+            print('Exception in {0}: {1}'.format(url, e))
+            exceptions.append({'url': url, 'error': e})
+        else:
+            status = page.status_code
+            for pattern, visitor in settings.visitors:
+                url_path = url[len(settings.root):]
+                if re.match(pattern, url_path):
+                    visitor(page)
+            # recurse while successful
+            if status == 200:
+                links = page.normalised_links(settings.start)
+                links.difference_update(visited)
+                # print("New links:\n" + "\n".join(links))
+                for link in links:
+                    pending.append((link, page))
+                    visited.add(link)
 
 
 if __name__ == '__main__':
