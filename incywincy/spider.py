@@ -1,10 +1,11 @@
 import re
+import sys
 
 from bs4 import BeautifulSoup
 import requests
 from requests.auth import HTTPBasicAuth
 
-import settings
+from incywincy import config
 
 
 UA = 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'
@@ -110,17 +111,18 @@ def visit(url, parent=None):
 
 
 if __name__ == '__main__':
+    config.settings = config.Settings(sys.argv[1])
+    settings = config.settings
     try:
         auth = HTTPBasicAuth(settings.user, settings.password)
     except:
         auth = None
 
-    import sys
-    settings.root = sys.argv[1]
+    settings.root = sys.argv[2]
     if settings.root.endswith('/'):
         settings.root = settings.root[:-1]
     try:
-        settings.start = sys.argv[2]
+        settings.start = sys.argv[3]
     except:
         settings.start = settings.root
     visit(settings.start, settings.root)

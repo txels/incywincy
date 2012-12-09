@@ -1,4 +1,4 @@
-import settings
+from incywincy.config import settings
 
 
 broken = []
