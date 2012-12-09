@@ -1,5 +1,6 @@
 import re
 import sys
+from urlparse import urlparse, urlsplit, urlunsplit, urljoin
 
 from bs4 import BeautifulSoup
 import requests
@@ -13,34 +14,22 @@ visited = set()
 exceptions = []
 
 
-def absolutize(url):
-    """
-    Convert url to absolute address, based on page root.
-    """
-    if ':' in url[:20]:
-        return url
-    else:
-        if settings.root.endswith('/') and url.startswith('/'):
-            url = url[1:]
-        return settings.root + url
-
-
 def find_links(html):
     """
-    Find all links in the HTML page.
+    Find all ``<a>`` links in the HTML page.
     """
     soup = BeautifulSoup(html)
     links = filter(lambda a: 'href' in a.attrs, soup.find_all('a'))
     return [a['href'] for a in links]
 
 
-def normalised(links, start):
+def normalised(links, start, base):
     """
     Return a set of normalised links.
 
     These will all be absolute URLs, and no repeats.
     """
-    links = [absolutize(link) for link in links]
+    links = [urljoin(base, link) for link in links]
     return set(filter(lambda x: x.startswith(start), links))
 
 
@@ -76,10 +65,11 @@ class Page(object):
                 content_type = self.headers['Content-Type']
                 if content_type.startswith('text/html'):
                     self._links = find_links(self.text)
+                    print('Links: ' + ', '.join(self._links))
         return self._links
 
     def normalised_links(self, start):
-        return normalised(self.links, start)
+        return normalised(self.links, start, self.url)
 
 
 def visit(url, parent=None):
@@ -93,8 +83,8 @@ def visit(url, parent=None):
     try:
         page = Page(url, parent)
     except Exception as e:
-        print('Exception in {0}'.format(page))
-        exceptions.append({'page': page, 'error': e})
+        print('Exception in {0}: {1}'.format(url, e))
+        exceptions.append({'url': url, 'error': e})
     else:
         status = page.status_code
         for pattern, visitor in settings.visitors:

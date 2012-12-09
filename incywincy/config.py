@@ -2,6 +2,9 @@ loading = False
 
 
 class Settings(dict):
+    """
+    Lazyly loaded settings.
+    """
     def __init__(self, module):
         self.module = module
         self._mod = None
