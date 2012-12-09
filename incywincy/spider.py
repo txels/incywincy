@@ -1,6 +1,6 @@
 import re
 import sys
-from urlparse import urlparse, urlsplit, urlunsplit, urljoin
+from urlparse import urljoin
 
 from bs4 import BeautifulSoup
 import requests
@@ -65,7 +65,7 @@ class Page(object):
                 content_type = self.headers['Content-Type']
                 if content_type.startswith('text/html'):
                     self._links = find_links(self.text)
-                    print('Links: ' + ', '.join(self._links))
+                    # print('Links: ' + ', '.join(self._links))
         return self._links
 
     def normalised_links(self, start):
