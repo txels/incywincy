@@ -27,12 +27,12 @@ regular expressions.
 
     python -m incywincy.spider <settings_module> <url>
 
+...where settings module is a python module that contains a variable 
+``visitors``.
+
 E.g.:
 
     python -m incywincy.spider incywincy.sample_settings http://eden.uktv.co.uk
-
-...where settings module is a python module that contains a variable 
-``visitors``.
 
 See ``incywincy.sample_settings`` for an example:
 
