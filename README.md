@@ -1,12 +1,12 @@
 # Incy Wincy - a spider testing framework
 
 The purpose of ``incywincy`` is to make it easy to write tests that need to
-perform checks on every page of a website. It is especially convenient for 
+perform checks on every page of a website. It is especially convenient for
 applications whose URLs can be changed and extended by users, i.e. any
 site that can be built via user-edited content (such as a CMS).
 
 ``incywincy`` implements the *visitor* pattern, by spidering through all the
-links in a website from a starting point, parsing each into a ``Page`` 
+links in a website from a starting point, parsing each into a ``Page``
 object and passing it to a set of *visitors*.
 A visitor is a function that receives a page and can analyse it and report
 on something specific.
@@ -27,12 +27,14 @@ regular expressions.
 
     python -m incywincy.spider <settings_module> <url>
 
-...where settings module is a python module that contains a variable 
+...where settings module is a python module that contains a variable
 ``visitors``.
 
 E.g.:
 
-    python -m incywincy.spider incywincy.sample_settings http://eden.uktv.co.uk
+    python -m incywincy.spider my_settings http://eden.uktv.co.uk
+
+(Make sure that the settings name you pass is a module in the Python path.)
 
 See ``incywincy.sample_settings`` for an example:
 
