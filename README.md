@@ -1,4 +1,4 @@
-# Inciwincy - a spider testing framework
+# Incy Wincy - a spider testing framework
 
 The purpose of ``incywincy`` is to make it easy to write tests that need to
 perform checks on every page of a website. It is especially convenient for 
