@@ -11,12 +11,13 @@ Options:
 """
 if __name__ == '__main__':
     from docopt import docopt
-    from incywincy import __version__, config, report
+    from incywincy import __version__, report
+    from incywincy.config import settings
+    from incywincy.http import visit
 
     arguments = docopt(__doc__, version='Incy Wincy ' + __version__)
-    print arguments
-    config.settings = config.Settings(arguments['<settings>'])
-    settings = config.settings
+    # print arguments
+    settings.load(arguments['<settings>'])
     report.THRESHOLD = int(arguments['--level'])
 
     settings.root = arguments['<url>']
@@ -27,5 +28,4 @@ if __name__ == '__main__':
     if settings.start is None:
         settings.start = settings.root
 
-    from incywincy.http import visit
     visit(settings.start, settings.root)
