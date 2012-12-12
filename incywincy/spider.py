@@ -83,10 +83,11 @@ def visit(url, parent=None):
 
     pending.append((url, parent))
     visited.add(url)
+    total = 1
 
     while len(pending) > 0:
         url, parent = pending.popleft()
-        print('Opening: ' + url)
+        print('[{0},+{1}] Opening: {2}'.format(total, len(pending), url))
         try:
             page = Page(url, parent)
         except Exception as e:
@@ -106,6 +107,7 @@ def visit(url, parent=None):
                 for link in links:
                     pending.append((link, page))
                     visited.add(link)
+                total += len(links)
 
 
 if __name__ == '__main__':
