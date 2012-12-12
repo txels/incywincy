@@ -76,20 +76,22 @@ def visit(url, parent=None):
     """
     Recursively visit all pages from this URL.
 
-    Will keep track of visited pages, so as to avoid processing links twice.
+    Will keep track of seen pages, so as to avoid processing links twice.
     """
     try:
         settings.auth = HTTPBasicAuth(settings.user, settings.password)
     except:
         settings.auth = None
 
+    # Keep a queue of pending links, and a set of seen links
     pending = deque()
-    visited = set()
+    seen = set()
 
     pending.append((url, parent))
-    visited.add(url)
+    seen.add(url)
     total = 1
 
+    # Main crawler loop
     while len(pending) > 0:
         url, parent = pending.popleft()
         debug('[{0},+{1}] Opening: {2}'.format(total, len(pending), url))
@@ -99,20 +101,16 @@ def visit(url, parent=None):
             error('Exception in {0}: {1}'.format(url, e))
             exceptions.append({'url': url, 'error': e})
         else:
-            status = page.status_code
             for pattern, visitor in settings.visitors:
                 url_path = url[len(settings.root):]
                 if re.match(pattern, url_path):
                     visitor(page)
-            # recurse while successful
-            if status == 200:
+            # add new links to queue if successful
+            if page.status_code == 200:
                 links = page.normalised_links(settings.start)
-                links.difference_update(visited)
+                links.difference_update(seen)
                 # debug("New links:\n" + "\n".join(links))
                 for link in links:
                     pending.append((link, page))
-                    visited.add(link)
+                    seen.add(link)
                 total += len(links)
-
-
-

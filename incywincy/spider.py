@@ -16,7 +16,7 @@ if __name__ == '__main__':
     from incywincy.http import visit
 
     arguments = docopt(__doc__, version='Incy Wincy ' + __version__)
-    # print arguments
+    # print(arguments)
     settings.load(arguments['<settings>'])
     report.THRESHOLD = int(arguments['--level'])
 
