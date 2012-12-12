@@ -17,7 +17,7 @@ setup(
     install_requires=['beautifulsoup4', 'requests'],
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Intended Audience :: Testers',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
