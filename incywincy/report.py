@@ -14,7 +14,7 @@ THRESHOLD = 1
 
 
 def log(page, message, level=WARNING):
-    if level > THRESHOLD:
+    if level >= THRESHOLD:
         print(">> {0}: {1} | {2}".format(CRITICALITY[level], message, page.url))
 
 

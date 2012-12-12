@@ -1,2 +1,3 @@
+docopt
 BeautifulSoup4
 requests
