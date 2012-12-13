@@ -3,3 +3,6 @@
 *.swp
 *.pyc
 /.ropeproject
+/dist
+/docs/_build
+*.egg-info/
